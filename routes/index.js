@@ -15,7 +15,7 @@ router.post('/register', user_controller.register);
 router.post('/login',  user_controller.login);
 router.get('/profile', requiresLogin, function (req, res, next) {
   console.log(req);
-  res.render('user_profile');
+  res.render('./../views/user_profile');
 });
 // GET /logout
 router.get('/logout', function (req, res, next) {

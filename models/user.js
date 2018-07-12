@@ -4,6 +4,12 @@ const { check, validationResult } = require('express-validator/check');
 mongoose.connect('mongodb://localhost:27017/custom');
 var UserSchema = new mongoose.Schema({
 
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
   email: {
     type: String,
     unique: true,
@@ -23,8 +29,6 @@ var UserSchema = new mongoose.Schema({
 });
 UserSchema.pre('save', function (next) {
   var user = this;
-  console.log("pre save");
-
   bcrypt.hash(user.password, false, false, function (err, hash) {
     user.password = hash;
     console.log(user.password);
