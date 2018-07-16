@@ -1,7 +1,6 @@
 
 
 var User = require("./../models/user");
-var bcrypt = require('bcrypt-nodejs');
 exports.register = function (req, res, next) {
     var newUser = new User(req.body);
     var response = {}

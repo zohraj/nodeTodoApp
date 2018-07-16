@@ -1,7 +1,6 @@
-var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt-nodejs');
 const { check, validationResult } = require('express-validator/check');
-mongoose.connect('mongodb://localhost:27017/custom');
 var UserSchema = new mongoose.Schema({
 
   name: {
