@@ -3,24 +3,21 @@ exports.add = function (req, res, next) {
     var newItem = new Item(req.body);
     newItem.save()
         .then(item => {
-            console.log("----Added");
-            res.send("item saved to database");
+            res.send("New item added");
         })
         .catch(err => {
-            console.log("---Catched")
             console.log(err);
-            res.status(400).send("unable to save to database");
+            res.status(400).send("Unable to create new item");
         });
 }
 exports.list = function (req, res, next) {
-    console.log("retrieving list");
-    Item.find({}, 'title', function (err, item) {
+    Item.find({}, function (err, item) {
         if (err) res.status(400).send("Error:" + err);
         res.status(200).send(item);
     })
 }
 exports.update = function (req, res, next) {
-    
+
     Item.update(
         { _id: req.params.id },
         { $set: { 'title': req.body.title } },
