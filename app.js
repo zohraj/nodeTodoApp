@@ -26,7 +26,6 @@ db.init(); //initiating the db config
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
-//TODO: import index route containing all routes
 
 
 // error handler

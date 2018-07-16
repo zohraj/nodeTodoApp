@@ -1,5 +1,3 @@
-
-
 var User = require("./../models/user");
 exports.register = function (req, res, next) {
     var newUser = new User(req.body);
