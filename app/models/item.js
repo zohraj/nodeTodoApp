@@ -11,7 +11,15 @@ var ItemSchema = new mongoose.Schema({
         type: String,
         // required: true,
         trim: true
-    }
+    },
+
+    createdBy:
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        }
+
 
 });
 ItemSchema.pre('save', function (next) {

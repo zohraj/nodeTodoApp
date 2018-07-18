@@ -1,24 +1,26 @@
+const bcrypt = require('bcrypt-nodejs');
 var User = require("./../models/user");
 exports.register = function (req, res, next) {
     var newUser = new User(req.body);
     var response = {}
     newUser.save()
         .then(user => {
-            response={
-                success:true,
-                message:"User Registered Successfully",
+            response = {
+                success: true,
+                data:newUser,
+                message: "User Registered Successfully",
                 code: 2022,
-                statusCode:200
+                statusCode: 200
             }
             res.status(response.statusCode).send(response);
         })
         .catch(err => {
             console.log(err);
-            response={
-                success:true,
-                message:"User not registerd",
+            response = {
+                success: true,
+                message: "User not registerd",
                 code: 2023,
-                statusCode:400
+                statusCode: 400
             }
             res.status(response.statusCode).send(response);
         });
@@ -36,33 +38,35 @@ exports.login = function (req, res, next) {
             var userFound = false;
             User.find({ username: params.username }, 'password').exec(function (err, user) {
                 // if (err) return handleError(err);
+                response = {
+                    success: true,
+                    message: 'Incorrect username or password',
+                    code: 2021,
+                    statusCode: 200
+                }
                 if (user && user[0]) {
-
-
                     bcrypt.compare(params.password, user[0]._doc.password, function (err, isMatch) {
-
                         if (isMatch) {
                             userFound = true;
                             response = {
                                 success: true,
+                                data: user[0]._doc,
                                 message: 'Login',
                                 code: 2020,
-                                statusCode: 200
+                                statusCode: 200,
+
                             }
                         }
+                        res.status(response.statusCode).send(response);
 
 
                     })
                 }
-                if (!userFound) {
-                    response = {
-                        success: true,
-                        message: 'Incorrect username or password',
-                        code: 2021,
-                        statusCode: 200
-                    }
+                else {
+                    res.status(response.statusCode).send(response);
                 }
-                res.status(response.statusCode).send(response);
+
+
 
             })
         }

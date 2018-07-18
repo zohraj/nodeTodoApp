@@ -3,15 +3,22 @@ exports.add = function (req, res, next) {
     var newItem = new Item(req.body);
     newItem.save()
         .then(item => {
-            res.send("New item added");
+            res.status(200).json("New item added");
         })
         .catch(err => {
             console.log(err);
-            res.status(400).send("Unable to create new item");
+            res.status(400).json("Unable to create new item");
         });
 }
 exports.list = function (req, res, next) {
-    Item.find({}, function (err, item) {
+    console.log("params:",req.params);
+    Item.find({createdBy:req.params.id}, function (err, item) {
+        if (err) res.status(400).send("Error:" + err);
+        res.status(200).send(item);
+    })
+}
+exports.item = function (req, res, next) {
+    Item.find({ _id: req.params.id }, function (err, item) {
         if (err) res.status(400).send("Error:" + err);
         res.status(200).send(item);
     })
@@ -20,23 +27,28 @@ exports.update = function (req, res, next) {
 
     Item.update(
         { _id: req.params.id },
-        { $set: { 'title': req.body.title } },
+        {
+            $set: {
+                'title': req.body.title,
+                'description': req.body.description
+            }
+        },
         function (err) {
             if (!err) {
-                res.status(200).send("Updated !");
+                res.status(200).json("Updated !");
             }
             else {
-                res.status(200).send("Error");
+                res.status(200).json("Error");
             }
         });
 }
 exports.delete = function (req, res, next) {
     Item.remove({ _id: req.params.id }, function (err) {
         if (!err) {
-            res.status(200).send("Deleted!");
+            res.status(200).json("Deleted!");
         }
         else {
-            res.status(200).send("Error");
+            res.status(200).json("Error");
             console.log(err);
         }
     });

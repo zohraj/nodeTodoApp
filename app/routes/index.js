@@ -7,9 +7,10 @@ var item_service = require('./../services/item');
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
-router.get('/list', item_service.list);
+router.get('/list/:id', item_service.list);
 router.post('/add', item_service.add);
 router.put('/update/:id', item_service.update);
+router.get('/item/:id', item_service.item);
 router.delete('/delete/:id', item_service.delete);
 router.post('/register', user_service.register);
 router.post('/login', user_service.login);
