@@ -1,5 +1,7 @@
+var config = require('../config');
 const bcrypt = require('bcrypt-nodejs');
 var User = require("./../models/user");
+const jwt = require('jsonwebtoken');
 exports.register = function (req, res, next) {
     var newUser = new User(req.body);
     var response = {}
@@ -7,7 +9,7 @@ exports.register = function (req, res, next) {
         .then(user => {
             response = {
                 success: true,
-                data:newUser,
+                data: newUser,
                 message: "User Registered Successfully",
                 code: 2022,
                 statusCode: 200
@@ -48,6 +50,11 @@ exports.login = function (req, res, next) {
                     bcrypt.compare(params.password, user[0]._doc.password, function (err, isMatch) {
                         if (isMatch) {
                             userFound = true;
+                            var token = jwt.sign({ id: user[0]._doc._id }, config.secret, {
+                                // expiresInMinutes: 1440 // expires in 24 hours
+                            });
+
+                            user[0]._doc.token = token;
                             response = {
                                 success: true,
                                 data: user[0]._doc,
@@ -72,4 +79,41 @@ exports.login = function (req, res, next) {
         }
     });
 
+}
+exports.getAllUsers = function (req, res, next) {
+    var token = req.headers['x-access-token'];
+    jwt.verify(token, config.secret, function (err, decoded) {
+        if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        User.find({}, ).exec(function (err, users) {
+            // if (err) return handleError(err);
+
+            if (err) res.status(400).send("Error:" + err);
+            var response = {
+                success: true,
+                message: 'success',
+                data: users,
+                code: 2025,
+                statusCode: 200
+            }
+            res.status(200).send(response);
+        });
+
+    });
+}
+exports.updateUserSocketId = function (req,res,next) {
+    user.update(
+        { _id: req.params.id },
+        {
+            $set: {
+                'socketId': req.body.socketId,
+            }
+        },
+        function (err) {
+            if (!err) {
+                res.status(200).json("Updated !");
+            }
+            else {
+                res.status(200).json("Error");
+            }
+        });
 }

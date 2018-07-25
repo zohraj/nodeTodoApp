@@ -1,23 +1,32 @@
 var express = require('express');
 var router = express.Router();
-var user_service = require('./../services/user');
-var item_service = require('./../services/item');
+
+var UserService = require('./../services/user');
+var ItemService = require('./../services/item');
+var chat_service = require('./../services/chat');
+var ChatService = require('./../services/conversation');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
+
 });
-router.get('/list/:id', item_service.list);
-router.post('/add', item_service.add);
-router.put('/update/:id', item_service.update);
-router.get('/item/:id', item_service.item);
-router.delete('/delete/:id', item_service.delete);
-router.post('/register', user_service.register);
-router.post('/login', user_service.login);
+
+
+router.get('/list/:id', ItemService.list);
+router.post('/add', ItemService.add);
+router.put('/update/:id', ItemService.update);
+router.get('/item/:id', ItemService.item);
+router.delete('/delete/:id', ItemService.delete);
+router.post('/register', UserService.register);
+router.post('/login', UserService.login);
+router.get("/users", UserService.getAllUsers)
+router.post("/chat", chat_service.getDirectMessages)
 router.get('/profile', requiresLogin, function (req, res, next) {
   console.log(req);
   res.render('./view/user_profile');
 });
+
 // GET /logout
 router.get('/logout', function (req, res, next) {
   if (req.session) {
@@ -31,6 +40,17 @@ router.get('/logout', function (req, res, next) {
     });
   }
 });
+
+
+
+// Retrieve single conversation
+router.get('/:conversationId', ChatService.getConversation);
+
+// Send reply in conversation
+router.post('/:conversationId', ChatService.sendReply);
+
+// Start new conversation
+router.post('/new/:recipient', ChatService.newConversation);
 
 function requiresLogin(req, res, next) {
   if (req.session && req.session.user) {
