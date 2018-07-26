@@ -22,25 +22,6 @@ router.post('/register', UserService.register);
 router.post('/login', UserService.login);
 router.get("/users", UserService.getAllUsers)
 router.post("/chat", chat_service.getDirectMessages)
-router.get('/profile', requiresLogin, function (req, res, next) {
-  console.log(req);
-  res.render('./view/user_profile');
-});
-
-// GET /logout
-router.get('/logout', function (req, res, next) {
-  if (req.session) {
-    // delete session object
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect('/');
-      }
-    });
-  }
-});
-
 
 
 // Retrieve single conversation
@@ -52,13 +33,5 @@ router.post('/:conversationId', ChatService.sendReply);
 // Start new conversation
 router.post('/new/:recipient', ChatService.newConversation);
 
-function requiresLogin(req, res, next) {
-  if (req.session && req.session.user) {
-    return next();
-  } else {
-    var err = new Error('You must be logged in to view this page.');
-    err.status = 401;
-    return next(err);
-  }
-}
+
 module.exports = router;

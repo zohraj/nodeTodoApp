@@ -100,20 +100,4 @@ exports.getAllUsers = function (req, res, next) {
 
     });
 }
-exports.updateUserSocketId = function (req,res,next) {
-    user.update(
-        { _id: req.params.id },
-        {
-            $set: {
-                'socketId': req.body.socketId,
-            }
-        },
-        function (err) {
-            if (!err) {
-                res.status(200).json("Updated !");
-            }
-            else {
-                res.status(200).json("Error");
-            }
-        });
-}
+
