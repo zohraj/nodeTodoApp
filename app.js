@@ -14,7 +14,7 @@ var onlineUsers = config.onlineUsers;
 app.use(cors());
 app.use(express.json()); // support json encoded bodies
 app.use(validator());
-
+app.set('view engine', 'jade');
 app.set('superSecret', config.secret);
 require('dotenv').config()
 db.init(); //initiating the db config

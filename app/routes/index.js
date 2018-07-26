@@ -21,17 +21,17 @@ router.delete('/delete/:id', ItemService.delete);
 router.post('/register', UserService.register);
 router.post('/login', UserService.login);
 router.get("/users", UserService.getAllUsers)
-router.post("/chat", chat_service.getDirectMessages)
+// router.post("/chat", chat_service.getDirectMessages)
+
 
 
 // Retrieve single conversation
-router.get('/:conversationId', ChatService.getConversation);
-
-// Send reply in conversation
-router.post('/:conversationId', ChatService.sendReply);
-
+router.get("/chat/:converstationId", ChatService.getConversation)
 // Start new conversation
-router.post('/new/:recipient', ChatService.newConversation);
+router.post("/chat/new/:recipient", ChatService.newConversation)
+// Send reply in conversation
+router.post("chat/:conversationId", ChatService.sendReply)
+
 
 
 module.exports = router;

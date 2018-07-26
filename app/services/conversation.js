@@ -48,7 +48,8 @@ exports.newConversation = function(req, res, next) {
     }
   
     const conversation = new Conversation({
-      participants: [req.user._id, req.params.recipient]
+      // participants: [req.user._id, req.params.recipient]
+      participants: [req.body.userId, req.params.recipient]
     });
   
     conversation.save(function(err, newConversation) {
@@ -60,7 +61,7 @@ exports.newConversation = function(req, res, next) {
       const message = new Message({
         conversationId: newConversation._id,
         body: req.body.composedMessage,
-        author: req.user._id
+        author: req.body.userId
       });
   
       message.save(function(err, newMessage) {
@@ -77,12 +78,13 @@ exports.newConversation = function(req, res, next) {
 
 
   exports.getConversation = function(req, res, next) {  
-    Message.find({ conversationId: req.params.conversationId })
+    Message.find({})
       .select('createdAt body author')
       .sort('-createdAt')
+      // .populate('author')
       .populate({
         path: 'author',
-        select: 'profile.firstName profile.lastName'
+        select: 'email username name'
       })
       .exec(function(err, messages) {
         if (err) {
