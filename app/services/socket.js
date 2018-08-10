@@ -1,6 +1,6 @@
 var config = require('../config')
 exports = module.exports = function (io) {
-    console.log("io", io);
+   
     // Set socket.io listeners.
     io.on('connection', function (socket) {
         onConnect(socket);
@@ -9,6 +9,7 @@ exports = module.exports = function (io) {
 
     onConnect = (socket) => {
         console.log("connected with socket");
+        socket.emit("new-message","I am server");
 
 
         // On conversation entry, join broadcast channel
